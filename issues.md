@@ -25,6 +25,7 @@ From @ZappeL:
 
 Guide TODO
 ==========
+* Run `timedatectl set-timezone` after reboot, when dbus is running
 * Add `switcheroo-control` to the packages that get installed, test dGPU on individual programs (eDP, HDMI, Type-C DP)
 * Add gnome extension: `rog-core GEX`
 * Add GreenWithEnvy
