@@ -424,15 +424,12 @@ Run `bootctl list` to verify that the entry just added will function:
 
 This step assumes a GNOME desktop environment is desired. For any other environment, such as KDE, a different set of packages will need to be installed.
 
-    [root@arch-g14]# pacman --sync --noconfirm acpid base-devel bluez bluez-utils chrome-gnome-shell \
+    [root@arch-g14]# pacman --sync --noconfirm base-devel bluez bluez-utils chrome-gnome-shell \
       clang curl cups git gnome gnome-software-packagekit-plugin gnome-tweak-tool man man-db man-pages \
       pacman-contrib pulseaudio pulseaudio-alsa sane sudo system-config-printer systemd-swap tar texinfo \
       ttf-dejavu xdg-utils xf86-video-amdgpu xorg xorg-server
 
 After all packages are installed, enable the system services associated with the above packages:
-
-    [root@archiso /]# systemctl enable acpid.service
-    Created symlink /etc/systemd/system/multi-user.target.wants/acpid.service → /usr/lib/systemd/system/acpid.service
 
 <!-- Separator -->
 
