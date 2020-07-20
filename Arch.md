@@ -264,9 +264,13 @@ At this point, the new installation can be entered via `arch-chroot`:
 
 #### Localization
 
-Set the clock to the local timezone:
+Set the clock to the local timezone (use the tab key after `/usr/share/zoneinfo` if needed):
 
-    [root@archiso /]# timedatectl set-timezone America/Chicago
+    [root@archiso /]# ln -svf /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+Configure the system clock:
+
+    [root@archiso /]# hwclock --systohc
 
 Configure the locale by editing `/etc/locale.gen`. Remove the leading comment character, `#`, from any lines that pertain to a locale that will be used (such as `en_US` or `de_DE`). To search for a specific locale, such as `en_US`, press CTRL-W, then the locale name, then press ENTER. The next time CTRL-W is pressed, the previous search term can be used again by pressing ENTER immediately after CTRL-W. Afterwards, run `locale-gen`.
 
@@ -280,7 +284,7 @@ Configure the locale by editing `/etc/locale.gen`. Remove the leading comment ch
 
 Set the `LANG` variable in `/etc/locale.conf` to the default locale, e.g. `en_US.UTF-8`, and then export the `LANG` variable for the local shell session:
 
-    [root@archiso /]# echo LANG=en_US.UTF-8 > /etc/locale.conf
+    [root@archiso /]# echo LANG=en_US.UTF-8 >> /etc/locale.conf
     [root@archiso /]# export LANG=en_US.UTF-8
     [root@archiso /]# 
 
