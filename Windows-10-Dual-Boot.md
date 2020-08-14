@@ -208,6 +208,12 @@ Install Windows
 ---------------
 Reboot into a Windows installation media. Be sure to select 'custom install' and not 'express install,' so that Windows will get installed in the free space that was allocated previously.
 
-TODO: tell Windows to use UTC, so that it doesn't ruin the clock for Linux
+### Prevent Windows from Resetting The System Clock
 
-TODO: driver installation
+In the Windows registry editor,`regedit`, find the following entry: `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation`
+
+Add a DWORD32 key called `RealTimeIsUniversal` and set it to `1`.
+
+Alternatively, Linux can be configured to expect the system clock to be in local time, which is the way Windows works without the above change:
+
+    > timedatectl set-local-rtc 1 --adjust-system-clock
