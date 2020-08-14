@@ -217,3 +217,14 @@ Add a DWORD32 key called `RealTimeIsUniversal` and set it to `1`.
 Alternatively, Linux can be configured to expect the system clock to be in local time, which is the way Windows works without the above change:
 
     > timedatectl set-local-rtc 1 --adjust-system-clock
+
+### Disable Fast Boot
+
+TODO
+
+For now, see: https://www.windowscentral.com/how-disable-windows-10-fast-startup
+
+BIOS Boot Order
+---------------
+
+From time to time, Windows updates may reorder the boot order in the BIOS, causing the computer to boot straight into Windows, bypassing Linux. This must be corrected by entering the BIOS setup and correcting the boot order.
