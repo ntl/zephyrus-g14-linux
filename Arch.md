@@ -32,10 +32,10 @@ The guide assumes basic familiarity with Linux, like the ability to run commands
 
 Credits
 -------
-Linux on the Zephyrus G14 would not be possible without the efforts from the maintainers of the following projects:
+Linux on the Zephyrus G14 would not be possible without the efforts from the following projects:
 
-* [asus-rog-zephyrus-g14](https://lab.retarded.farm/zappel/asus-rog-zephyrus-g14/)
-* [rog-core](https://github.com/flukejones/rog-core)
+* [asus-rog-zephyrus-g14](https://asus-linux.org/)
+* [asus-nb-ctrl](https://gitlab.com/asus-linux/asus-nb-ctrl)
 
 Installation
 ------------
@@ -216,7 +216,7 @@ A third party package repository is provided by the Linux G14 community, and inc
 
     [g14]
     SigLevel = Optional TrustAll
-    Server = https://arch.retarded.farm
+    Server = https://arch.asus-linux.org
 
 Afterwards, the relevant section should look like this:
 
@@ -231,7 +231,7 @@ Afterwards, the relevant section should look like this:
 
     [g14]
     SigLevel = Optional TrustAll
-    Server = https://arch.retarded.farm
+    Server = https://arch.asus-linux.org
 
     [core]
     Include = /etc/pacman.d/mirrorlist
@@ -428,7 +428,7 @@ Run `bootctl list` to verify that the entry just added will function:
 
 This step assumes a GNOME desktop environment is desired. For any other environment, such as KDE, a different set of packages will need to be installed.
 
-    [root@arch-g14]# pacman --sync --noconfirm base-devel bluez bluez-utils chrome-gnome-shell \
+    [root@arch-g14]# pacman --sync --noconfirm asus-nb-ctrl base-devel bluez bluez-utils chrome-gnome-shell \
       clang curl cups git gnome gnome-software-packagekit-plugin gnome-tweak-tool man man-db man-pages \
       pacman-contrib pulseaudio pulseaudio-alsa sane sudo system-config-printer systemd-swap tar texinfo \
       ttf-dejavu xdg-utils xf86-video-amdgpu xorg xorg-server
@@ -506,45 +506,6 @@ Change into that directory for the next few steps, as they will involve installi
 Since AUR packages are built from source, the G14's 8 core processor can speed up the process by compiling source files in parallel. To enable multi-core compilation, set the `MAKEFLAGS` environment variable to either `-j16` (for 4800HS and 4900HS CPUs) or `-j8` (for 4600HS CPUs):
 
     [YOUR-USER-NAME@archiso aur]$ export MAKEFLAGS="-j16"
-
-#### Rog-Core
-
-The Windows installation that is supplied with the G14 includes a software package called "Armoury Crate" which allows for controlling the fan speed, boost, and more. `rog-core` is a command-line utility for Linux that offers similar functionality for ROG laptops. Download the source package from AUR via git:
-
-    [YOUR-USER-NAME@archiso aur]$ git clone --depth 1 https://aur.archlinux.org/rog-core.git
-    Cloning into 'rog-core'...
-    remote: Enumerating objects: 6, done.
-    remote: Counting objects: 100% (6/6), done.
-    remote: Compressing objects: 100% (5/5), done.
-    remote: Total 6 (delta 0), reused 6 (delta 0), pack-reused 0
-    Unpacking objects: 100% (6/6), 1.51 KiB | 1.51 MiB/s, done.
-
-Enter the `rog-core` directory and build/install the package via `makepkg`:
-
-    [YOUR-USER-NAME@archiso aur]$ cd rog-core
-    [YOUR-USER-NAME@archiso rog-core]$ makepkg --install --syncdeps --noconfirm --skippgpcheck
-    ==> Making package: rog-core 0.12.0-1 (Fri 26 Jun 2020 10:07:00 PM CDT)
-    ==> Checking runtime dependencies...
-    ==> Checking buildtime dependencies...
-    ==> Retrieving sources...
-    *omitted*
-    (1/1) downgrading rog-core                         [##########] 100%
-    :: Running post-transaction hooks...
-    (1/3) Reloading system manager configuration...
-    (2/3) Arming ConditionNeedsUpdate...
-    (3/3) Reloading system bus configuration...
-    [YOUR-USER-NAME@archiso rog-core]$
-
-<!-- Separator -->
-
-    [YOUR-USER-NAME@archiso rog-core]$ cd ..
-    [YOUR-USER-NAME@archiso aur]$
-
-Enable the `rog-core` service with `systemctl`:
-
-    [YOUR-USER-NAME@archiso aur]$ sudo systemctl enable rog-core.service
-    Created symlink /etc/systemd/system/multi-user.target.wants/rog-core.service → /usr/lib/systemd/system/rog-core.service.
-    [YOUR-USER-NAME@archiso aur]$
 
 #### Custom Kernel (Advanced Users Only)
 
@@ -658,7 +619,7 @@ The Nvidia driver requires a few additional options to be set in order to functi
     options nvidia_drm modeset=1
     options nvidia NVreg_DynamicPowerManagement=0x02
 
-X11 requires configuration. There are several different approaches available, including NVidia PRIME and reverse PRIME, outlined [here](https://lab.retarded.farm/zappel/asus-rog-zephyrus-g14/-/wikis/Hardware/Graphics). The following configuration will have the NVidia dGPU drive X11, which is undesirable for battery life, but at the present moment seems to offers the best compatibility. Create a new file at `/etc/X11/xorg.conf.d/99-g14.conf` with the following contents:
+X11 requires configuration. There are several different approaches available, including NVidia PRIME and reverse PRIME, outlined [here](https://asus-linux.org/wiki/rog-zephyrus/g14-and-g15/hardware/graphics/). The following configuration will have the NVidia dGPU drive X11, which is undesirable for battery life, but at the present moment seems to offers the best compatibility. Create a new file at `/etc/X11/xorg.conf.d/99-g14.conf` with the following contents:
 
     Section "Module"
             Load "modesetting"
@@ -839,6 +800,6 @@ Note: a terminal can be opened in GNOME by pressing the Windows key, typing 'ter
 Next Steps
 ----------
 
-* Visit the [asus-rog-zephyrus-g14](https://lab.retarded.farm/zappel/asus-rog-zephyrus-g14) project page
-* Read through the asus-rog-zephyrus-g14 [project wiki](https://lab.retarded.farm/zappel/asus-rog-zephyrus-g14/-/wikis/home)
+* Visit [asus-linux.org](https://asus-linux.org)
+* Read through the ROG Zephyrus pages on the asus-linux.org [project wiki](https://asus-linux.org/wiki/rog-zephyrus/)
 * Join the [Discord community](https://discord.gg/DTxNE6s)
