@@ -18,3 +18,197 @@ The above checksum beginning with `258d8847` can be verified visually against th
 ## Installation
 
 ### Boot from Installation Media
+
+With the installation media connected to the G14, turn the G14 on and hit ESC a few times when the "Republic of Gamers" logo appears. This will bring up the boot menu, allowing the choice of either booting from the internal SSD (which comes with Windows 10 pre-installed) or from the installation media. If the installation media cannot be selected, then there is either a problem with the media itself, or with the burning process.
+
+Since, at present, Pop 20.04 does not support the G14 out of the box, a special parameter must be set in order to boot into the installation media. After selecting the installation media in the BIOS boot menu, press the space bar as soon as the Pop splash screen appears. A countdown timer shown at the bottom of the screen will disappear. Press `e` to access a text editor that will allow a custom boot parameter to be specified. Initially, the editor will show text that looks like this:
+
+```
+setparams 'Try or Install Pop_OS'
+
+	set gfxpayload=keep
+	linux /casper_pop-os_20.04_amd64_intel_debug_20/vmlinuz.efi boot=casper live-media-path=/casper_pop-os_20.04_amd64_intel_debug_20 hostname=pop-os username=pop-os noprompt  ---
+	initrd /casper_pop-os_20.04_amd64_intel_debug_20/initrd.gz
+```
+
+The cursor will be located at the very first character (the `s` in `setparams` on the first line), and the arrow keys can move the cursor around the text. Navigate to the line that begins with `linux`, and then move to the trailing `---` at the end, either with the right arrow key or by pressing `CTRL-e`. Delete the three hyphens and replace them with the following text:
+
+    nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau
+
+Afterward, the editor should show text that looks like this:
+
+```
+setparams 'Try or Install Pop_OS'
+
+	set gfxpayload=keep
+	linux /casper_pop-os_20.04_amd64_intel_debug_20/vmlinuz.efi boot=casper live-media-path=/casper_pop-os_20.04_amd64_intel_debug_20 hostname=pop-os username=pop-os noprompt nomodeset amdgpu.exp_hw_support modprobe=blacklist-nouve\
+au
+	initrd /casper_pop-os_20.04_amd64_intel_debug_20/initrd.gz
+```
+
+When the kernel parameters have been entered, press `F10` to boot into the installation media. After a few minutes of scrolling text, the graphical installation utility should appear.
+
+### Graphical Installation
+
+Select the desired language and keyboard layout, and then choose between either erasing the existing operating system entirely and replacing it with Pop (labeled "Clean Install") or a more advanced installation with a custom partition scheme (labeled "Custom (Advanced)"). The remainder of the guide will assume "Clean Install" was selected, and that an encryption password was subsequently supplied. If a dual boot setup with Windows is needed, it can be installed alongside a clean installation after Pop is up and running. Note: disk encryption cannot be configured during a custom installation.
+
+After either choosing a clean install, or initiating a custom installation, the installation will commence and take a few minutes to complete. Once it is done, the graphical installation tool will prompt to restart. **Do not restart just yet!** Before rebooting, some manual configuration is necessary, otherwise Pop will not be able to boot.
+
+Press the windows key, which will cause the background to dim, and a set of icons to appear on the left side of the screen (similar to the application dock on MacOS). Click on the icon that looks like a computer monitor, which opens a terminal. The prompt should look like this:
+
+```
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+pop-os@pop-os:~$ █
+```
+
+### Configure Boot Parameters
+
+The terminal is opened to the `pop-os` user. The following changes need to be made by the superuser ("root") account, so switch to the root user with `sudo su -`:
+
+    pop-os@pop-os:~$ sudo su -
+    root@pop-os:~# █
+
+Pop's installation set up a small boot partition at the beginning of the hard drive. It contains a file that must be edited before the laptop can successfully boot into Pop. First, create a _mount_ point on the filesystem at `/media/boot` where the boot partition will be made available for editing:
+
+    root@pop-os:~# mkdir /media/boot
+    root@pop-os:~# █
+
+Mount the boot partition (the name of the hard drive device is `nvme0n1p1`):
+
+    root@pop-os:~# mount /dev/nvme0n1p1 /media/disk
+    root@pop-os:~# █
+
+Edit the file located at `/media/boot/loader/entries/Pop_OS-current.conf` with `nano` (or `vi` for users familiar with Vim):
+
+    root@pop-os:~# nano /media/boot/loader/entries/Pop_OS-current.conf
+
+Press the down arrow key a few times to navigate to the bottom of the file, on the line of text beginning with `options`. Navigate to the end of the line by either pressing the arrow key repeatedly, or by pressing `CTRL-e` once. After `splash`, add `nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau` similar to before, when booting into the installation media. Save the file with `CTRL-o` and Enter, then exit the text editor (Nano) with `CTRL-x`. Next, close the terminal by clicking on the `X` in the top right corner of the window (it is safe to click "Close Terminal" when prompted).
+
+Now, click "Restart Device" and wait for the system to reboot. If an encryption password was given during installation, it must be supplied before the operating system can finish booting.
+
+A welcome dialog should appear next, which allows the installation process to be completed.
+
+### Finish Pop_OS Installation
+
+Click "Next" to resume installation, selecting a keyboard layout, a WiFi network, location services, timezone, and any online accounts that Pop can be connected to. Finally, set up a primary user account and then click "Start Using Pop_OS" on the final screen that indicates installation is complete.
+
+Now that Pop's installation procedure has finished, the operating system needs a few more changes to be made from a terminal. As before, press the Windows key and click on the terminal icon on the left menu bar. Then use `sudo su -` to gain superuser ("root") access (it will prompt for a password this time):
+
+```
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+pop-os@pop-os:~$ sudo su -
+[sudo] password for ntl:
+root@pop-os:~# █
+```
+
+#### Disable Open Source NVIDIA Driver (nouveau)
+
+The open source driver for NVIDIA chips, `nouveau`, does not work with recent NVIDIA offerings, including the GPUs included with the G14. It must be disabled permanently by creating a configuration file for `modprobe` (which is Linux's tool for controlling device drivers). Configuration files for modprobe go in `/etc/modprobe.d`. Edit `/etc/modprobe.d/disable-nvidia-nouveau.conf` with Nano:
+
+    root@pop-os:~# nano /etc/modprobe.d/disable-nvidia-nouveau.conf
+
+Type the following into the editor, and save and exit (`CTRL-o` and `CTRL-x`, respectively):
+
+    blacklist nouveau
+    options nouveau modeset=0
+
+#### Make Kernel Boot Parameters Permanent
+
+The kernel boot parameters configured earlier, `nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau`, need to be made permanent so that Pop's updates are free to refresh the boot loader configuration when necessary. Edit `/etc/kernelstub/configuration`:
+
+    root@pop-os:~# nano /etc/kernelstub/configuration
+
+The file should look like this:
+
+```
+{
+  "default": {
+    "kernel_options": [
+      "quiet",
+      "splash"
+    ],
+    "esp_path": "/boot/efi",
+    "setup_loader": false,
+    "manage_mode": false,
+    "force_update": false,
+    "live_mode": false,
+    "config_rev": 3
+  },
+  "user": {
+    "kernel_options": [
+      "quiet",
+      "loglevel=0",
+      "systemd.show_status=false",
+      "splash"
+    ],
+    "esp_path": "/boot/efi",
+    "setup_loader": true,
+    "manage_mode": true,
+    "force_update": false,
+    "live_mode": false,
+    "config_rev": 3
+  }
+}
+```
+
+Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist-nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward:
+
+```
+    ...
+    "kernel_options": [
+      "quiet",
+      ...
+      "splash",
+      "nomodeset",
+      "amdgpu.exp_hw_support",
+      "modprobe.blacklist-nouveau"
+    ],
+    "esp_path": "/boot/efi",
+    ...
+```
+
+When this is complete, save and exit (`CTRL-o` and `CTRL-x`, respectively). Now run `kernelstup` to cause the changes to `/etc/kernelstub/configuration` take into effect:
+
+    root@pop-os:~# kernelstub
+    root@pop-os:~# █
+
+At this point, the laptop should be able to boot on its own without any intervention. Click on the battery icon at the top right of the screen, then "Power Off / Log Out", then "Power Off...". A modal dialog should appear; click "Restart."
+
+## Custom Kernel (Xanmod)
+
+A recent kernel (5.8 or newer) is needed in order to take full advantage of the G14's hardware. Open Firefox by pressing the Windows key and clicking on the Firefox icon, which is at the top of the left menu bar. Navigate to [https://xanmod.org](https://xanmod.org). Find the section titled Install via AptURL, near the top of the page. First, the Xanmod repositories have to be added to the Pop installation. Where the page indicates to "First install the XanMod Repository Setup, then select a branch," click on the "XanMod Repository Setup" link. Firefox will open a file download dialog, allowing a file called `xanmod-repository.deb` to be installed with Eddy, which is the default program for installing `.deb` files. Click `OK` and then "Install" on the dialog that appears. Enter the user account password when prompted, and wait for the repository setup to finish. Eddy may be closed afterwards.
+
+Open a Terminal, gain superuser privileges with `sudo su -`, and install `linux-xanmod-edge` with `apt`:
+
+```
+YOUR-USER-NAME@pop-os:~$ sudo su -
+root@pop-os:~# sudo apt install linux-xanmod-edge
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  libelf-dev linux-headers-5.8.1-xanmod1 linux-image-5.8.1-xanmod1
+Suggested packages:
+  preload gamemode
+The following NEW packages will be installed:
+  libelf-dev linux-headers-5.8.1-xanmod1 linux-image-5.8.1-xanmod1
+  linux-xanmod-edge
+0 upgraded, 4 newly installed, 0 to remove and 342 not upgraded.
+Need to get 77.4 MB of archives.
+After this operation, 409 MB of additional disk space will be used.
+Do you want to continue? [Y/n] █
+```
+
+Type `Y` to continue, and eventually the installation will finish. The final few lines of text will look like this:
+
+```
+...
+kernelstub.Installer : INFO     Making entry file for Pop!_OS
+Setting up libelf-dev:amd64 (0.176-1.1build1) ...
+Setting up linux-xanmod-edge (5.8.1-xanmod1-0) ...
+root@pop-os:~# █
+```
