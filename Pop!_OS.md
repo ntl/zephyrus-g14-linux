@@ -269,7 +269,7 @@ YOUR-USER-NAME@pop-os:~/g14/hid-asus-rog$ cd ..
 YOUR-USER-NAME@pop-os:~/g14$ █
 ```
 
-### asus-rog-nb-wmi (Keyboard Backlight Support)
+### asus-rog-nb-wmi (Windows Media Interface support)
 
 Next, install another kernel patch, this time from [this project](https://gitlab.com/asus-linux/asus-rog-nb-wmi), which adds support for the G14 keyboard backlight control. As before, with `hid-asus-rog`, first download the project with `git` and enter it with `cd`:
 
@@ -303,7 +303,11 @@ hid-asus-rog, 0.2, 5.8.1-xanmod1, x86_64: installed
 ...
 ```
 
-### asus-nb-ctrl (G14 Hardware Control)
+### Screen Brightness
+
+TODO:  0002-drm-amd-display-use-correct-scale-for-actual_brightness.patch
+
+### asus-nb-ctrl (Asus Notebook Control)
 
 Next, install `asus-nb-ctrl` from [this project](https://gitlab.com/asus-linux/asus-nb-ctrl), which is a program that controls the G14 hardware, e.g. turning keyboard backlight on and off, setting the CPU performance mode, etc. Download the project with `git` and enter it with `cd`:
 
