@@ -100,8 +100,8 @@ Now that Pop's installation procedure has finished, the operating system needs a
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
 
-pop-os@pop-os:~$ sudo su -
-[sudo] password for ntl:
+YOUR-USER-NAME@pop-os:~$ sudo su -
+[sudo] password for YOUR-USER-NAME:
 root@pop-os:~# █
 ```
 
@@ -207,8 +207,140 @@ Type `Y` to continue, and eventually the installation will finish. The final few
 
 ```
 ...
-kernelstub.Installer : INFO     Making entry file for Pop!_OS
+kernelstub.Installer : INFO     Making entry file for Pop_OS
 Setting up libelf-dev:amd64 (0.176-1.1build1) ...
 Setting up linux-xanmod-edge (5.8.1-xanmod1-0) ...
 root@pop-os:~# █
 ```
+
+Reboot again, and the laptop should boot into a 5.8 kernel patched by Xanmod.
+
+Next, the device needs to install some software specialized to provide support for the G14. Open a new terminal and create a directory, `g14`, where this software will be downloaded and installed from:
+
+```
+YOUR-USER-NAME@pop-os:~$ mkdir g14
+YOUR-USER-NAME@pop-os:~$ cd g14
+YOUR-USER-NAME@pop-os:~/g14$ █
+```
+
+### hid-asus-rog (G14 Keyboard Support)
+
+First, install the kernel patch from [this project](https://gitlab.com/asus-linux/hid-asus-rog), which will make the G14 specific keys on the keyboard available. Download it using `git`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/hid-asus-rog.git
+Cloning into 'hid-asus-rog'...
+remote: Enumerating objects: 10, done.
+remote: Counting objects: 100% (10/10), done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 10 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (10/10), 21.16 KiB | 1.17 MiB/s, done.
+```
+
+Enter the `hid-asus-rog` directory and install with `sudo make dkms` and `sudo make onboot`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14$ cd hid-asus-rog
+```
+<!-- separator -->
+
+```
+YOUR-USER-NAME@pop-os:~/g14/hid-asus-rog$ sudo make dkms
+[sudo] password for YOUR-USER-NAME:
+make -C /lib/modules/5.8.1-xanmod1/build M=/home/YOUR-USER-NAME/g14/hid-asus-rog modules
+make[1]: Entering directory '/usr/src/linux-headers-5.8.1-xanmod1'
+  CC [M]  /home/YOUR-USER-NAME/g14/hid-asus-rog/src/hid-asus-rog.o
+  MODPOST /home/YOUR-USER-NAME/g14/hid-asus-rog/Module.symvers
+  CC [M]  /home/YOUR-USER-NAME/g14/hid-asus-rog/src/hid-asus-rog.mod.o
+  LD [M]  /home/YOUR-USER-NAME/g14/hid-asus-rog/src/hid-asus-rog.ko
+make[1]: Leaving directory '/usr/src/linux-headers-5.8.1-xanmod1'
+```
+<!-- separator -->
+```
+YOUR-USER-NAME@pop-os:~/g14/hid-asus-rog$ sudo make onboot
+[sudo] password for YOUR-USER-NAME:
+echo "blacklist hid-asus" > /etc/modprobe.d/asus-rog.conf
+```
+
+Leave the `hid-asus-rog` with `cd ..`
+
+```
+YOUR-USER-NAME@pop-os:~/g14/hid-asus-rog$ cd ..
+YOUR-USER-NAME@pop-os:~/g14$ █
+```
+
+### asus-rog-nb-wmi (Keyboard Backlight Support)
+
+Next, install another kernel patch, this time from [this project](https://gitlab.com/asus-linux/asus-rog-nb-wmi), which adds support for the G14 keyboard backlight control. As before, with `hid-asus-rog`, first download the project with `git` and enter it with `cd`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/asus-rog-nb-wmi.git
+Cloning into 'asus-rog-nb-wmi'...
+...
+Unpacking objects: 100% (10/10), 6.04 KiB | 1.21 MiB/s, done.
+YOUR-USER-NAME@pop-os:~/g14$ cd asus-rog-nb-wmi
+YOUR-USER-NAME@pop-os:~/g14/asus-rog-nb-wmi$ █
+```
+
+Install with `sudo make dkms` and `sudo make onboot`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-rog-nb-wmi$ sudo make dkms
+...
+```
+<!-- separator -->
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-rog-nb-wmi$ sudo make onboot
+...
+```
+
+Before proceeding, ensure that the above kernel patches are active with `dkms status`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-rog-nb-wmi$ dkms status
+asus-rog-nb-wmi, 0.1, 5.8.1-xanmod1, x86_64: installed
+hid-asus-rog, 0.2, 5.8.1-xanmod1, x86_64: installed
+...
+```
+
+### asus-nb-ctrl (G14 Hardware Control)
+
+Next, install `asus-nb-ctrl` from [this project](https://gitlab.com/asus-linux/asus-nb-ctrl), which is a program that controls the G14 hardware, e.g. turning keyboard backlight on and off, setting the CPU performance mode, etc. Download the project with `git` and enter it with `cd`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/asus-nb-ctrl.git
+Cloning into 'asus-nb-ctrl'...
+...
+Unpacking objects: 100% (10/10), 6.04 KiB | 1.21 MiB/s, done.
+YOUR-USER-NAME@pop-os:~/g14$ cd asus-nb-ctrl
+YOUR-USER-NAME@pop-os:~/g14/asus-nb-ctrl$ █
+```
+
+Before the project can be compiled, [Rust](https://rust-lang.org) and a few other dependencies must be installed:
+
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-nb-ctrl$ sudo apt install rustc libusb-1.0-0-dev libdbus-1-dev llvm libclang-dev libudev-dev
+```
+
+Compile the package with `make`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-nb-ctrl$ make
+```
+
+Install with `sudo make install`:
+
+```
+YOUR-USER-NAME@pop-os:~/g14/asus-nb-ctrl$ sudo make install
+[sudo] password for YOUR-USER-NAME:
+```
+
+After that, reboot, and the kernel should be all set. The keyboard backlight as well as the screen brightness should be controllable after logging in.
+
+## Getting the Hardware Working
+
+### Audio
+
+### Touchpad
+
+### Graphics
