@@ -378,6 +378,8 @@ Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now 
 
 The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). The iGPU should already be configured correctly, but the NVIDIA drivers must now be installed. Even if the dGPU isn't in use, the drivers must be available in order to power it down, which is a requirement to achieve the laptop's advertised battery life.
 
+TODO: NVidia installation and setup
+
 ### Touchpad
 
 TODO
