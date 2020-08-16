@@ -174,7 +174,7 @@ Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`)
     ...
 ```
 
-When this is complete, save and exit (`CTRL-o` and `CTRL-x`, respectively). Now run `kernelstup` to cause the changes to `/etc/kernelstub/configuration` take into effect:
+When this is complete, save and exit (`CTRL-o` and `CTRL-x`, respectively). Now run `kernelstub` to cause the changes to `/etc/kernelstub/configuration` take into effect:
 
     root@pop-os:~# kernelstub
     root@pop-os:~# █
