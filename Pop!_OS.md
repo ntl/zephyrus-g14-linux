@@ -17,6 +17,10 @@ The above checksum beginning with `258d8847` can be verified visually against th
 
 ## Installation
 
+### Disable Secure Boot
+
+Before the Pop installation media can be used, Secure Boot must be disabled in the BIOS. While in the BIOS configuration, Fast Boot will also be disabled. Turn the G14 on, and when the Republic of Gamers splash screen appears, press `F2` to enter the BIOS setup utility. Press `F7` to enter the advanced mode, and navigate right twice to the section titled "Boot." Select "Fast Boot" and disable it, then press the right arrow key to navigate from the "Boot" menu to "Security." Select "Secure Boot," then disable the option labeled "Secure Boot Control." Afterwards, press right again to reach the "Save & Exit" section. Press enter to save changes and exit, conforming the changes when prompted.
+
 ### Boot from Installation Media
 
 With the installation media connected to the G14, turn the G14 on and hit ESC a few times when the "Republic of Gamers" logo appears. This will bring up the boot menu, allowing the choice of either booting from the internal SSD (which comes with Windows 10 pre-installed) or from the installation media. If the installation media cannot be selected, then there is either a problem with the media itself, or with the burning process.
