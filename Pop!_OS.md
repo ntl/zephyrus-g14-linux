@@ -37,7 +37,7 @@ setparams 'Try or Install Pop_OS'
 
 The cursor will be located at the very first character (the `s` in `setparams` on the first line), and the arrow keys can move the cursor around the text. Navigate to the line that begins with `linux`, and then move to the trailing `---` at the end, either with the right arrow key or by pressing `CTRL-e`. Delete the three hyphens and replace them with the following text:
 
-    nomodeset amdgpu.exp_hw_support modprobe=blacklist-nouveau
+    nomodeset amdgpu.exp_hw_support modprobe.blacklist=nouveau
 
 Afterward, the editor should show text that looks like this:
 
@@ -88,7 +88,7 @@ Edit the file located at `/media/boot/loader/entries/Pop_OS-current.conf` with `
 
     root@pop-os:~# nano /media/boot/loader/entries/Pop_OS-current.conf
 
-Press the down arrow key a few times to navigate to the bottom of the file, on the line of text beginning with `options`. Navigate to the end of the line by either pressing the arrow key repeatedly, or by pressing `CTRL-e` once. After `splash`, add `nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau` similar to before, when booting into the installation media. Save the file with `CTRL-o` and Enter, then exit the text editor (Nano) with `CTRL-x`. Next, close the terminal by clicking on the `X` in the top right corner of the window (it is safe to click "Close Terminal" when prompted).
+Press the down arrow key a few times to navigate to the bottom of the file, on the line of text beginning with `options`. Navigate to the end of the line by either pressing the arrow key repeatedly, or by pressing `CTRL-e` once. After `splash`, add `nomodeset amdgpu.exp_hw_support modprobe.blacklist=nouveau` similar to before, when booting into the installation media. Save the file with `CTRL-o` and Enter, then exit the text editor (Nano) with `CTRL-x`. Next, close the terminal by clicking on the `X` in the top right corner of the window (it is safe to click "Close Terminal" when prompted).
 
 Now, click "Restart Device" and wait for the system to reboot. If an encryption password was given during installation, it must be supplied before the operating system can finish booting.
 
@@ -122,7 +122,7 @@ Type the following into the editor, and save and exit (`CTRL-o` and `CTRL-x`, re
 
 #### Make Kernel Boot Parameters Permanent
 
-The kernel boot parameters configured earlier, `nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau`, need to be made permanent so that Pop's updates are free to refresh the boot loader configuration when necessary. Edit `/etc/kernelstub/configuration`:
+The kernel boot parameters configured earlier, `nomodeset amdgpu.exp_hw_support modprobe.blacklist=nouveau`, need to be made permanent so that Pop's updates are free to refresh the boot loader configuration when necessary. Edit `/etc/kernelstub/configuration`:
 
     root@pop-os:~# nano /etc/kernelstub/configuration
 
@@ -159,7 +159,7 @@ The file should look like this:
 }
 ```
 
-Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist-nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
+Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist=nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
 
 ```
     ...
@@ -169,7 +169,7 @@ Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`)
       "splash",
       "nomodeset",
       "amdgpu.exp_hw_support=1",
-      "modprobe.blacklist-nouveau"
+      "modprobe.blacklist=nouveau"
     ],
     "esp_path": "/boot/efi",
     ...
