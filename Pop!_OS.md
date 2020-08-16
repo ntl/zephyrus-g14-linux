@@ -343,6 +343,10 @@ After that, reboot, and the kernel should be all set. The keyboard backlight as 
 
 ## Getting the Remaining Hardware Working
 
+### Update the System
+
+Click on the clock at the top middle of the screen. There should be a notification that operating system updates are available. Click through this process and allow it to finish. Another restart is recommended after the update finishes.
+
 ### Audio
 
 See: https://asus-linux.org/wiki/rog-zephyrus/g14-and-g15/hardware/audio/
