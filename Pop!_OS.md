@@ -33,7 +33,7 @@ setparams 'Try or Install Pop_OS'
 
 The cursor will be located at the very first character (the `s` in `setparams` on the first line), and the arrow keys can move the cursor around the text. Navigate to the line that begins with `linux`, and then move to the trailing `---` at the end, either with the right arrow key or by pressing `CTRL-e`. Delete the three hyphens and replace them with the following text:
 
-    nomodeset amdgpu.exp_hw_support modprobe.blacklist-nouveau
+    nomodeset amdgpu.exp_hw_support modprobe=blacklist-nouveau
 
 Afterward, the editor should show text that looks like this:
 
@@ -367,6 +367,28 @@ override-map.2 = all-left,all-right
 
 Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now function properly.
 
+### Graphics
+
+The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). Neither is correctly configured just yet. To configure the iGPU, edit `/usr/share/X11/xorg.conf.d/90-zephyrus-g14.conf`:
+
+```
+Section "Device"
+	Identifier "iGPU"
+	Driver "amdgpu"
+EndSection
+
+Section "Screen"
+	Identifier "iGPU"
+	Device "iGPU"
+EndSection
+```
+
+This file will be edited later, after the NVIDIA drivers are installed.
+
 ### Touchpad
 
-### Graphics
+TODO
+
+### Battery Life and Performance
+
+TODO
