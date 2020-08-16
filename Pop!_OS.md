@@ -159,7 +159,7 @@ The file should look like this:
 }
 ```
 
-Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist-nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward:
+Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist-nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
 
 ```
     ...
@@ -168,7 +168,7 @@ Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`)
       ...
       "splash",
       "nomodeset",
-      "amdgpu.exp_hw_support",
+      "amdgpu.exp_hw_support=1",
       "modprobe.blacklist-nouveau"
     ],
     "esp_path": "/boot/efi",
