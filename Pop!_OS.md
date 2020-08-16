@@ -159,7 +159,7 @@ The file should look like this:
 }
 ```
 
-Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist=nouveau` one at a time, giving each its own line. Also, add a comma after `"splash"`. The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
+Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `amdgpu.exp_hw_support`, and `modprobe.blacklist=nouveau` each its own line, with a comma after each (as well as after the preceding `"splash"`). The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
 
 ```
     ...
@@ -167,7 +167,6 @@ Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`)
       "quiet",
       ...
       "splash",
-      "nomodeset",
       "amdgpu.exp_hw_support=1",
       "modprobe.blacklist=nouveau"
     ],
@@ -377,21 +376,7 @@ Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now 
 
 ### Graphics
 
-The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). Neither is correctly configured just yet. To configure the iGPU, edit `/usr/share/X11/xorg.conf.d/90-zephyrus-g14.conf`:
-
-```
-Section "Device"
-	Identifier "iGPU"
-	Driver "amdgpu"
-EndSection
-
-Section "Screen"
-	Identifier "iGPU"
-	Device "iGPU"
-EndSection
-```
-
-This file will be edited later, after the NVIDIA drivers are installed.
+The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). The iGPU should already be configured correctly, but the NVIDIA drivers must now be installed. Even if the dGPU isn't in use, the drivers must be available in order to power it down, which is a requirement to achieve the laptop's advertised battery life.
 
 ### Touchpad
 
