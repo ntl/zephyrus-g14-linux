@@ -232,7 +232,7 @@ YOUR-USER-NAME@pop-os:~/g14$ █
 First, install the kernel patch from [this project](https://gitlab.com/asus-linux/hid-asus-rog), which will make the G14 specific keys on the keyboard available. Download it using `git`:
 
 ```
-YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/hid-asus-rog.git
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth 1 https://gitlab.com/asus-linux/hid-asus-rog.git
 Cloning into 'hid-asus-rog'...
 remote: Enumerating objects: 10, done.
 remote: Counting objects: 100% (10/10), done.
@@ -278,7 +278,7 @@ YOUR-USER-NAME@pop-os:~/g14$ █
 Next, install another kernel patch, this time from [this project](https://gitlab.com/asus-linux/asus-rog-nb-wmi), which adds support for the G14 keyboard backlight control. As before, with `hid-asus-rog`, first download the project with `git` and enter it with `cd`:
 
 ```
-YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/asus-rog-nb-wmi.git
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth 1 https://gitlab.com/asus-linux/asus-rog-nb-wmi.git
 Cloning into 'asus-rog-nb-wmi'...
 ...
 Unpacking objects: 100% (10/10), 6.04 KiB | 1.21 MiB/s, done.
@@ -316,7 +316,7 @@ TODO:  0002-drm-amd-display-use-correct-scale-for-actual_brightness.patch
 Next, install `asus-nb-ctrl` from [this project](https://gitlab.com/asus-linux/asus-nb-ctrl), which is a program that controls the G14 hardware, e.g. turning keyboard backlight on and off, setting the CPU performance mode, etc. Download the project with `git` and enter it with `cd`:
 
 ```
-YOUR-USER-NAME@pop-os:~/g14$ git clone --depth -1 https://gitlab.com/asus-linux/asus-nb-ctrl.git
+YOUR-USER-NAME@pop-os:~/g14$ git clone --depth 1 https://gitlab.com/asus-linux/asus-nb-ctrl.git
 Cloning into 'asus-nb-ctrl'...
 ...
 Unpacking objects: 100% (10/10), 6.04 KiB | 1.21 MiB/s, done.
@@ -379,7 +379,21 @@ Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now 
 
 The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). Now that the laptop is running a 5.8 version of Linux, the `nomodeset` option is no longer necessary to safely boot. This will allow the iGPU to work properly. Open `/etc/kernelstub/configuration` as a superuser ("root") and delete the two lines that contain `"nomodeset",`. Save and exit the file, then run `sudo kernelstub` (or just `kernelstub` as root). Afterwards, reboot and log in. The screen brightness controls should now correctly adjust the screen backlight intensity.
 
-TODO: NVidia installation and setup
+Navigate to [NVIDIA's UNIX drivers page](https://www.nvidia.com/en-us/drivers/unix/) and download the latest version, 450.57. Firefox will place the file at `~/Downloads/NVIDIA-Linux-x86_64-450.57.run`. First, the file permissions need to be adjusted to allow it to execute:
+
+```
+YOUR-USER-NAME@pop-os:~$ chmod u+x ~/Downloads/NVIDIA-Linux-x86_64-450.57.run
+```
+
+Then execute the file as a superuser:
+
+```
+YOUR-USER-NAME@pop-os:~$ sudo ~/Downloads/NVIDIA-Linux-x86_64-450.57.run
+Verifying archive integrity... OK
+Uncompressing NVIDIA Accelerated Graphics Driver for Linux-x86_64 450.57................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+```
+
+A text interface will appear in the terminal 
 
 ### Touchpad
 
