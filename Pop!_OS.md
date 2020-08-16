@@ -307,10 +307,6 @@ hid-asus-rog, 0.2, 5.8.1-xanmod1, x86_64: installed
 ...
 ```
 
-### Screen Brightness
-
-TODO:  0002-drm-amd-display-use-correct-scale-for-actual_brightness.patch
-
 ### asus-nb-ctrl (Asus Notebook Control)
 
 Next, install `asus-nb-ctrl` from [this project](https://gitlab.com/asus-linux/asus-nb-ctrl), which is a program that controls the G14 hardware, e.g. turning keyboard backlight on and off, setting the CPU performance mode, etc. Download the project with `git` and enter it with `cd`:
