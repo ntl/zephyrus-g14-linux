@@ -159,7 +159,7 @@ The file should look like this:
 }
 ```
 
-Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `amdgpu.exp_hw_support`, and `modprobe.blacklist=nouveau` each its own line, with a comma after each (as well as after the preceding `"splash"`). The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
+Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`) and add the boot parameters `nomodeset`, `amdgpu.exp_hw_support`, and `modprobe.blacklist=nouveau` each its own line, with a comma after each (as well as after the preceding `"splash"`). The sections should both look like this afterward (note the `=1` at the end of the `amdgpu` entry):
 
 ```
     ...
@@ -167,6 +167,7 @@ Under _both_ `"kernel_options"` entries, navigate to the final line (`"splash"`)
       "quiet",
       ...
       "splash",
+      "nomodeset",
       "amdgpu.exp_hw_support=1",
       "modprobe.blacklist=nouveau"
     ],
@@ -376,7 +377,7 @@ Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now 
 
 ### Graphics
 
-The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). The iGPU should already be configured correctly, but the NVIDIA drivers must now be installed. Even if the dGPU isn't in use, the drivers must be available in order to power it down, which is a requirement to achieve the laptop's advertised battery life.
+The G14 has two GPUs -- the integrated AMD Vega GPU ("iGPU") which shares the same die as the CPU, and a separate dedicated NVIDIA GPU ("dGPU"). Now that the laptop is running a 5.8 version of Linux, the `nomodeset` option is no longer necessary to safely boot. This will allow the iGPU to work properly. Open `/etc/kernelstub/configuration` as a superuser ("root") and delete the two lines that contain `"nomodeset",`. Save and exit the file, then run `sudo kernelstub` (or just `kernelstub` as root). Afterwards, reboot and log in. The screen brightness controls should now correctly adjust the screen backlight intensity.
 
 TODO: NVidia installation and setup
 
