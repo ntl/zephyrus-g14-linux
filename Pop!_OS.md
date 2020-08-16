@@ -341,9 +341,31 @@ YOUR-USER-NAME@pop-os:~/g14/asus-nb-ctrl$ sudo make install
 
 After that, reboot, and the kernel should be all set. The keyboard backlight as well as the screen brightness should be controllable after logging in.
 
-## Getting the Hardware Working
+## Getting the Remaining Hardware Working
 
 ### Audio
+
+See: https://asus-linux.org/wiki/rog-zephyrus/g14-and-g15/hardware/audio/
+
+As the superuser, edit `/usr/share/pulseaudio/alsa-mixer/paths/analog-output-speaker.conf` and find the part of the file that contains the sections titled `[Element Hardware Master]`, `[Element Master]`, and `[Element Master Mono]`. Adjust those sections so that they look like this (from the document just linked):
+
+```
+[Element Hardware Master]
+switch = mute
+volume = ignore
+
+[Element Master]
+switch = mute
+volume = ignore
+
+[Element PCM]
+switch = mute
+volume = merge
+override-map.1 = all
+override-map.2 = all-left,all-right
+```
+
+Run `pulseaudio -k` as a normal (non-super) user. The volume buttons should now function properly.
 
 ### Touchpad
 
