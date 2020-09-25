@@ -219,4 +219,14 @@ Reboot one final time and ensure that the Fn key combinations work as expected.
 
 ## To Do
 
+* `dracut.conf.d/90-nvidia-dracut-G05.conf`:
+
+    # filename /etc/dracut.conf.d/90-nvidia-dracut-G05.conf
+    # Omit the nvidia driver from the ramdisk, to avoid needing to regenerate
+    # the ramdisk on updates, and to ensure the power-management udev rules run
+    # on module load
+    omit_drivers+=" nvidia nvidia-drm nvidia-modeset nvidia-uvm "
+
+* Test `dracut -f` instead of than the lengthy alternative
+
 * Install all Asus specific RPMs through a single repository
