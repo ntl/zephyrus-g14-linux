@@ -219,6 +219,10 @@ Reboot one final time and ensure that the Fn key combinations work as expected.
 
 ## To Do
 
+* Disable Wayland in `/etc/gdm/custom.conf`:
+
+    WaylandEnable=false
+
 * `dracut.conf.d/90-nvidia-dracut-G05.conf`:
 
     # filename /etc/dracut.conf.d/90-nvidia-dracut-G05.conf
